@@ -1,58 +1,34 @@
-#
-# Copyright (C) 2015 The Dokdo Project
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
+LOCAL_PATH := device/samsung/j7eltexx
 
-TARGET_OTA_ASSERT_DEVICE := j7eltexx,j7elte
-
-J7ELTE_PATH := device/samsung/j7eltexx
-
-BOARD_VENDOR := samsung
-
-# Architecture
 TARGET_ARCH := arm
+TARGET_NO_BOOTLOADER := true
+TARGET_NO_RADIOIMAGE := true
+
+# Platform
+TARGET_BOARD_PLATFORM := exynos5
+TARGET_SLSI_VARIANT := blobs
+
+# CPU
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_ARCH_VARIANT := armv7-a-neon
 TARGET_CPU_VARIANT := cortex-a15
 
-# Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := universal7580
-TARGET_NO_BOOTLOADER := true
-TARGET_NO_RADIOIMAGE := true
 
-# Include path
-TARGET_SPECIFIC_HEADER_PATH := $(J7ELTE_PATH)/include
+# /proc/partitions * BLOCK_SIZE (512)
+BOARD_BOOTIMAGE_PARTITION_SIZE := 29360128
+BOARD_CACHEIMAGE_PARTITION_SIZE := 104857600
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 35651584
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 1887436800
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 13514047488
+BOARD_FLASH_BLOCK_SIZE := 131072
 
-# Bluetooth
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(J7ELTE_PATH)/bluetooth
-BOARD_BLUEDROID_VENDOR_CONF := $(J7ELTE_PATH)/bluetooth/libbt_vndcfg.txt
-BOARD_HAVE_BLUETOOTH := true
-BOARD_HAVE_BLUETOOTH_BCM := true
+# PowerHAL
+TARGET_POWERHAL_VARIANT := universal7580
 
-# Charger
-BOARD_BATTERY_DEVICE_NAME := battery
-BOARD_CHARGER_ENABLE_SUSPEND := true
-BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/batt_lp_charging
-CHARGING_ENABLED_PATH := "/sys/class/power_supply/battery/batt_lp_charging"
-
-# Graphics
-USE_OPENGL_RENDERER := true
-NUM_FRAMEBUFFER_SURFACE_BUFFERS := 5
-
-# Include an expanded selection of fonts
-EXTENDED_FONT_FOOTPRINT := true
+# Sensors
+TARGET_NO_SENSOR_PERMISSION_CHECK := true
 
 # Kernel
 TARGET_KERNEL_ARCH := arm64
@@ -63,76 +39,83 @@ KERNEL_TOOLCHAIN_PREFIX := aarch64-linux-android-
 BOARD_KERNEL_BASE := 0x10000000
 BOARD_KERNEL_CMDLINE :=
 BOARD_KERNEL_PAGESIZE := 2048
-BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 --tags_offset 0x00000100 --dt $(J7ELTE_PATH)/dtb.img
+BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 --tags_offset 0x00000100 --dt $(LOCAL_PATH)/dtb.img
 TARGET_KERNEL_CONFIG := cm_j7eltexx_defconfig
 TARGET_KERNEL_SOURCE := kernel/samsung/j7eltexx
 TARGET_USES_UNCOMPRESSED_KERNEL := true
 
-# Lights
-TARGET_PROVIDES_LIBLIGHT := true
-
-# Partitions
-TARGET_USERIMAGES_USE_EXT4 := true
-#BOARD_BOOTIMAGE_PARTITION_SIZE := 29360128
-#BOARD_RECOVERYIMAGE_PARTITION_SIZE := 35651584
-#BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3656552448
-#BOARD_CACHEIMAGE_PARTITION_SIZE := 104857600
-#BOARD_USERDATAIMAGE_PARTITION_SIZE := 13514047488
-#BOARD_FLASH_BLOCK_SIZE := 131072
-BOARD_BOOTIMAGE_PARTITION_SIZE := 32768000
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x360000000
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2154496000
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 13514047488
-BOARD_FLASH_BLOCK_SIZE := 131072
-
-# Recovery
-TARGET_RECOVERY_FSTAB := $(J7ELTE_PATH)/rootdir/etc/fstab.samsungexynos7580
-
-# Platform
-TARGET_BOARD_PLATFORM := exynos5
-TARGET_SLSI_VARIANT := blobs
-
-# Radio
-BOARD_PROVIDES_LIBRIL := true
-BOARD_MODEM_TYPE := m7450
-BOARD_RIL_CLASS := ../../../$(J7ELTE_PATH)/ril
-
-# Recovery
-BOARD_HAS_NO_SELECT_BUTTON := true
+# Use these flags if the board has a ext4 partition larger than 2gb
 BOARD_HAS_LARGE_FILESYSTEM := true
-BOARD_HAS_NO_MISC_PARTITION := true
-BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_23x41.h\"
-BOARD_SUPPRESS_SECURE_ERASE := true
-BOARD_HAS_DOWNLOAD_MODE := true
+TARGET_USERIMAGES_USE_EXT4 := true
 
-# TWRP specific build flags
-TW_THEME := portrait_hdpi
-RECOVERY_SDCARD_ON_DATA := true
-BOARD_HAS_NO_REAL_SDCARD := true
-RECOVERY_GRAPHICS_USE_LINELENGTH := true
-TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
-TW_BRIGHTNESS_PATH := "/sys/devices/13900000.dsim/backlight/panel/brightness"
-TW_MAX_BRIGHTNESS := 255
-TW_NO_REBOOT_BOOTLOADER := true
-TW_HAS_DOWNLOAD_MODE := true
-#TW_INCLUDE_CRYPTO := true
-TW_EXCLUDE_SUPERSU := true
+# Bluetooth
+BOARD_HAVE_BLUETOOTH := true
+BOARD_HAVE_BLUETOOTH_BCM := true
+BOARD_BLUEDROID_VENDOR_CONF := $(LOCAL_PATH)/bluetooth/libbt_vndcfg.txt
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
 
-# WEBGL
-ENABLE_WEBGL := true
+# Graphics
+USE_OPENGL_RENDERER := true
+OVERRIDE_RS_DRIVER := libRSDriverArm.so
 
-# Wifi
-BOARD_HAVE_SAMSUNG_WIFI          := true
-BOARD_WLAN_DEVICE                := bcmdhd
-WPA_SUPPLICANT_VERSION           := VER_0_8_X
+# frameworks/native/services/surfaceflinger
+NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
+
+# Include path
+TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
+
+# Hardware
+BOARD_HARDWARE_CLASS += device/samsung/j7eltexx/cmhw
+
+# WIFI
 BOARD_WPA_SUPPLICANT_DRIVER      := NL80211
+WPA_SUPPLICANT_VERSION           := VER_0_8_X
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_bcmdhd
 BOARD_HOSTAPD_DRIVER             := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB        := lib_driver_cmd_bcmdhd
+BOARD_WLAN_DEVICE                := bcmdhd
 WIFI_DRIVER_FW_PATH_PARAM        := "/sys/module/dhd/parameters/firmware_path"
-WIFI_DRIVER_FW_PATH_STA          := "/system/etc/wifi/bcmdhd_sta.bin"
-WIFI_DRIVER_FW_PATH_AP           := "/system/etc/wifi/bcmdhd_apsta.bin"
-WIFI_BAND                        := 802_11_ABG
+WIFI_DRIVER_NVRAM_PATH_PARAM     := "/sys/module/dhd/parameters/nvram_path"
+WIFI_DRIVER_NVRAM_PATH           := "/etc/wifi/nvram_net.txt"
+WIFI_DRIVER_FW_PATH_STA          := "/etc/wifi/bcmdhd_sta.bin"
+WIFI_DRIVER_FW_PATH_AP           := "/etc/wifi/bcmdhd_apsta.bin"
 
-# inherit from the proprietary version
--include vendor/samsung/j7eltexx/BoardConfigVendor.mk
+# Webkit
+ENABLE_WEBGL := true
+
+# WFD
+BOARD_USES_WFD := true
+
+# Wifi Macloader
+BOARD_HAVE_SAMSUNG_WIFI := true
+
+# Charger/Healthd
+BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/batt_lp_charging
+BOARD_CHARGER_ENABLE_SUSPEND := true
+BOARD_CHARGER_SHOW_PERCENTAGE := true
+RED_LED_PATH := "/sys/class/leds/led_r/brightness"
+GREEN_LED_PATH := "/sys/class/leds/led_g/brightness"
+BLUE_LED_PATH := "/sys/class/leds/led_b/brightness"
+BACKLIGHT_PATH := "/sys/class/backlight/panel/brightness"
+CHARGING_ENABLED_PATH := /sys/class/power_supply/battery/batt_lp_charging
+
+# RIL
+BOARD_VENDOR := samsung
+BOARD_PROVIDES_LIBRIL := true
+TARGET_IGNORE_RO_BOOT_REVISION := true
+
+# RIL.java overwrite
+BOARD_RIL_CLASS := ../../../$(LOCAL_PATH)/ril
+
+# Recovery
+TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/etc/fstab.samsungexynos7580
+
+# SELinux
+BOARD_SEPOLICY_DIRS := \
+	device/samsung/j7eltexx/sepolicy
+
+# RIL
+BOARD_MODEM_TYPE := m7450
+
+# Recovery
+TARGET_OTA_ASSERT_DEVICE := j7elte,j7eltexx

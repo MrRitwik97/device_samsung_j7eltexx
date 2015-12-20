@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2013 The Android Open Source Project
- *                    The CyanogenMod Project
+ * Copyright (C) 2014 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
  */
 
 
-#define LOG_TAG "lights"
-//#define LOG_NDEBUG 0
+#define LOG_TAG "Exynos5433LightsHAL"
+/* #define LOG_NDEBUG 0 */
 
 #include <cutils/log.h>
 
@@ -256,7 +256,7 @@ static int set_light_battery(struct light_device_t *dev,
         led.green = (colorRGB >> 8) & 0xFF;
         led.blue = colorRGB & 0xFF;
         snprintf(led.blink, MAX_WRITE_CMD, "0x%x %d %d", colorRGB, state->flashOnMS, state->flashOffMS);
-        ALOGD("set_light_battery 0x%x %d %d", colorRGB, state->flashOnMS, state->flashOffMS);
+        ALOGV("set_light_battery 0x%x %d %d", colorRGB, state->flashOnMS, state->flashOffMS);
     }
 
     g_BatteryStore = led;
@@ -317,7 +317,7 @@ struct hw_module_t HAL_MODULE_INFO_SYM = {
     .version_major = 1,
     .version_minor = 0,
     .id = LIGHTS_HARDWARE_MODULE_ID,
-    .name = "J7ELTE Module",
+    .name = "Exynos5433 Lights Module",
     .author = "The CyanogenMod Project",
     .methods = &lights_module_methods,
 };
