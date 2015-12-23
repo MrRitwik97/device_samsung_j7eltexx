@@ -148,7 +148,8 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PROPERTY_OVERRIDES += \
     af.fast_track_multiplier=1 \
-    audio_hal.force_wideband=true
+    audio_hal.force_wideband=true \
+    audio_hal.disable_two_mic=true
 
 ###########################################################
 ### OMX/MEDIA
@@ -268,7 +269,11 @@ PRODUCT_PACKAGES += \
 
 ADDITIONAL_DEFAULT_PROPERTIES += \
     ro.debug_level=0x4948 \
-    ro.secure=0
+    ro.secure=0 \
+    ro.allow.mock.location=0 \
+    ro.debuggable=1 \
+    ro.adb.secure=0 \
+    persist.sys.usb.config=mtp
 
 ###########################################################
 ### DALVIK/ART
@@ -298,10 +303,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.hwui.text_small_cache_height=2048 \
     ro.hwui.text_large_cache_width=4096 \
     ro.hwui.text_large_cache_height=4096
-
-$(call inherit-product, frameworks/native/build/phone-xhdpi-2048-dalvik-heap.mk)
-
-$(call inherit-product-if-exists, frameworks/native/build/phone-xhdpi-2048-hwui-memory.mk)
 
 # call the proprietary setup
 $(call inherit-product-if-exists, vendor/samsung/j7eltexx/j7eltexx-vendor.mk)

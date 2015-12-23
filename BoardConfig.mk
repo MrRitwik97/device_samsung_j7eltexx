@@ -39,7 +39,7 @@ KERNEL_TOOLCHAIN_PREFIX := aarch64-linux-android-
 BOARD_KERNEL_BASE := 0x10000000
 BOARD_KERNEL_CMDLINE :=
 BOARD_KERNEL_PAGESIZE := 2048
-BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 --tags_offset 0x00000100 --dt $(LOCAL_PATH)/dtb.img
+BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x11000000 --tags_offset 0x10000100 --dt $(LOCAL_PATH)/dtb.img
 TARGET_KERNEL_CONFIG := cm_j7eltexx_defconfig
 TARGET_KERNEL_SOURCE := kernel/samsung/j7eltexx
 TARGET_USES_UNCOMPRESSED_KERNEL := true
@@ -56,7 +56,9 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
 
 # Graphics
 USE_OPENGL_RENDERER := true
-OVERRIDE_RS_DRIVER := libRSDriverArm.so
+
+#Renderscript
+BOARD_OVERRIDE_RS_CPU_VARIANT_32 := cortex-a53
 
 # frameworks/native/services/surfaceflinger
 NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3

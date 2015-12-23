@@ -50,13 +50,6 @@ public class SlteRIL extends RIL {
 
     private static final int RIL_REQUEST_DIAL_EMERGENCY_CALL = 10016;
 
-    private static final int RIL_REQUEST_SIM_TRANSMIT_BASIC = 10026;
-    private static final int RIL_REQUEST_SIM_OPEN_CHANNEL = 10027;
-    private static final int RIL_REQUEST_SIM_CLOSE_CHANNEL = 10028;
-    private static final int RIL_REQUEST_SIM_TRANSMIT_CHANNEL = 10029;
-
-    private Message mPendingGetSimStatus;
-
     public SlteRIL(Context context, int preferredNetworkType, int cdmaSubscription) {
         super(context, preferredNetworkType, cdmaSubscription, null);
     }
@@ -84,47 +77,6 @@ public class SlteRIL extends RIL {
     public void
     acceptCall(Message result) {
         acceptCall(0, result);
-    }
-
-    /**
-     *  Translates EF_SMS status bits to a status value compatible with
-     *  SMS AT commands.  See TS 27.005 3.1.
-     */
-    private int translateStatus(int status) {
-        switch(status & 0x7) {
-            case SmsManager.STATUS_ON_ICC_READ:
-                return 1;
-            case SmsManager.STATUS_ON_ICC_UNREAD:
-                return 0;
-            case SmsManager.STATUS_ON_ICC_SENT:
-                return 3;
-            case SmsManager.STATUS_ON_ICC_UNSENT:
-                return 2;
-        }
-
-        // Default to READ.
-        return 1;
-    }
-
-    @Override
-    public void writeSmsToSim(int status, String smsc, String pdu, Message response) {
-        status = translateStatus(status);
-
-        RILRequest rr = RILRequest.obtain(RIL_REQUEST_WRITE_SMS_TO_SIM,
-                response);
-
-        rr.mParcel.writeInt(status);
-        rr.mParcel.writeString(pdu);
-        rr.mParcel.writeString(smsc);
-        rr.mParcel.writeInt(255);     /* Samsung */
-
-        if (RILJ_LOGV) {
-            riljLog(rr.serialString() + "> "
-                    + requestToString(rr.mRequest)
-                    + " " + status);
-        }
-
-        send(rr);
     }
 
     @Override
@@ -351,22 +303,6 @@ public class SlteRIL extends RIL {
         rr.mParcel.writeString(pdu);
     }
 
-    /**
-     * The RIL can't handle the RIL_REQUEST_SEND_SMS_EXPECT_MORE
-     * request properly, so we use RIL_REQUEST_SEND_SMS instead.
-     */
-    @Override
-    public void sendSMSExpectMore(String smscPDU, String pdu, Message result) {
-        Rlog.v(RILJ_LOG_TAG, "XMM7260: sendSMSExpectMore");
-
-        RILRequest rr = RILRequest.obtain(RIL_REQUEST_SEND_SMS, result);
-        constructGsmSendSmsRilRequest(rr, smscPDU, pdu);
-
-        if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
-
-        send(rr);
-    }
-
     // This method is used in the search network functionality.
     // See mobile network setting -> network operators
     @Override
@@ -381,13 +317,8 @@ public class SlteRIL extends RIL {
         }
 
         ret = new ArrayList<OperatorInfo>(strings.length / mQANElements);
-        Operators init = null;
-        if (strings.length != 0) {
-            init = new Operators();
-        }
-
         for (int i = 0 ; i < strings.length ; i += mQANElements) {
-            String strOperatorLong = init.unOptimizedOperatorReplace(strings[i+0]);
+            String strOperatorLong = strings[i+0];
             String strOperatorNumeric = strings[i+2];
             String strState = strings[i+3].toLowerCase();
 
